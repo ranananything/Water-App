@@ -1,0 +1,28 @@
+<pre><div class="text_to_html">declare
+  myString varchar2(50) := 'In the last decade, there was the one';
+  StLength Number(5);
+  UmyString varchar2(50);
+  LmyString varchar2(50);
+  ImyString varchar2(50);
+  StPosition Number(3);
+  SubmyString varchar2(50);
+begin
+  dbms_output.put_line(myString);
+  dbms_output.put_line(Ltrim(myString));
+  StLength := Length(myString);
+  Dbms_output.put_line('String Length is ' || StLength);
+  UmyString := upper(myString);
+  LmyString := Lower(myString);
+  StPosition := Instr(myString, 'two');
+  submyString := substr(myString, 8, 11);
+  Dbms_output.put_line('LmyString: ' || LmyString);
+  ImyString := Initcap(LmyString);
+  Dbms_output.put_line('ImyString: ' || ImyString);
+  Dbms_output.put_line('Upper of myString is: '|| UmyString);
+  Dbms_output.put_line('Lower of myString is: '|| LmyString);
+  Dbms_output.put_line('InitCap of myString is: '|| ImyString);
+  Dbms_output.put_line('Position of ''two'' in myString is: '|| StPosition);
+  Dbms_output.put_line('Substring of myString is: '|| submyString);
+end;
+/
+</div></pre>
