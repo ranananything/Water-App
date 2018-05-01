@@ -40,6 +40,41 @@
       </div>
   </div><!-- /navbar -->
 
+
+
+
+
+
+
+
+
+
+
+ <div id="modal2" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h5 id="textch" >Show Map</h5>
+     <div class="row">
+        <div class="input-field col s12">
+          <input  id="Map_Name" type="text" class="validate">
+          <label for=" ">Map Name</label>
+        </div>
+    
+      </div>
+  
+
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a> 
+  
+    </div>
+  </div>
+
+
+
+
+
+
+
        
        
      <div class="row" style="  position: fixed;
@@ -192,19 +227,43 @@ console.log('ponter2 ' + first_name)
         // var t21215 = document.createTextNode(Time);       
         // timeTag.appendChild(t21215);                                
         // document.getElementById(k).appendChild(timeTag);
+/*
+        <div class="input-field col s12">
+          <input  id="Map_Name" type="text" class="validate">
+          <label for=" ">Map Name</label>
+        </div>
+
+*/
+
+        var coustTag = document.createElement("p");        
+        var r232 = document.createTextNode("Quantity:");       
+        coustTag.appendChild(r232);                                
+        document.getElementById(k).appendChild(coustTag);
+
+           var coustTag = document.createElement("input");        
+        var r232 = document.createTextNode("" );       
+        coustTag.appendChild(r232);    
+               coustTag.setAttribute('id' , "input"+ k + "");  
 
 
+        document.getElementById(k).appendChild(coustTag);
 
         var botton_n = document.createElement("a");        
         var t = document.createTextNode("Choose");       
         botton_n.appendChild(t);
         botton_n.setAttribute('class', "waves-effect  waves-light btn ");
         var fu_onclick = "Start('"+ k + "')";
-        botton_n.setAttribute('onclick' , fu_onclick); 
+     
+        botton_n.setAttribute('onclick' , fu_onclick);
+        //    botton_n.setAttribute('href' , '#modal2');    
         botton_n.setAttribute('style' , "z-index: 0;"); 
         
-                                       
+        
         document.getElementById(k).appendChild(botton_n);
+
+      
+
+
 
 
 
@@ -259,12 +318,20 @@ var lat_lng = {lat: lat, lng: lng};
 
 
 
+ $(document).ready(function(){
+    // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+    $('.modal').modal();
+
+    });
 
 
 
 function Start(key ) {
+
+  var Quantity = $("#input"+key+"").val();
+
   
- var data22 = { Status: "waiting" , userIDClint: User_ID , first_name:first_name , last_name:last_name, phone:phone  };
+ var data22 = { Status: "waiting" , userIDClint: User_ID , first_name:first_name , last_name:last_name, phone:phone,Quantity:Quantity  };
 console.log('ponter2 ' + data22)
 var MyPath22 = firebase.database().ref( 'Station/' + key + '/NewOrder/');
 

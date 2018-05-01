@@ -60,7 +60,8 @@
     <li class="card-panel hoverable">
       <h5 id="Fullname"></h5>
       <p id="phone"></p>
-
+      <p id="Quantity_value"></p>
+       
     <a class="btn-floating btn-large waves-effect waves-light " onclick="Agree()"><i class="fa fa-check" aria-hidden="true"> Agree</i></a>
     <a class="btn-floating btn-large waves-effect waves-light red" onclick="Close()"><i class="fa fa-times" aria-hidden="true"> Close</i>>NO</i></a>
   </li>
@@ -103,14 +104,15 @@ MyPath.once('value')
   .then(function(GetData) {
 
     var Data = GetData.val();
-
+console.log(Data);
+console.log(Data.NewOrder.Quantity);
 var Date_order =  Date();
 
 
 
 
 
-  var data = { first_name: first_name, last_name: last_name, Time_tx:Data.Time_tx , Cost_tx:Data.Cost_tx , Date_order:Date_order};
+  var data = { first_name: first_name, last_name: last_name, Time_tx:Data.Time_tx , Cost_tx:Data.Cost_tx , Date_order:Date_order ,Quantity:Data.NewOrder.Quantity};
 var MyPath = firebase.database().ref('Station/' + User_ID + '/MyOrder/');
 MyPath.push(data)
   .then(function() {
@@ -121,7 +123,7 @@ MyPath.push(data)
   });
 
 
-  var data22 = { first_name: Data.first_name, last_name: Data.last_name, Time_tx:Data.Time_tx , Cost_tx:Data.Cost_tx , Date_order:Date_order };
+  var data22 = { first_name: Data.first_name, last_name: Data.last_name, Time_tx:Data.Time_tx , Cost_tx:Data.Cost_tx , Date_order:Date_order ,Quantity:Data.NewOrder.Quantity};
 var MyPath22 = firebase.database().ref('Customer/' + userIDClint + '/MyOrder/');
 MyPath22.push(data22)
   .then(function() {
@@ -218,7 +220,7 @@ MyPath.update(data)
   }
 
 
-var first_name, last_name , Status ,userIDClint ;
+var first_name, last_name , Status ,userIDClint,Quantity_value ;
 
 function start() {
  
@@ -231,12 +233,14 @@ var MyPath = firebase.database().ref('Station/' + User_ID + '/NewOrder/');
  last_name =  GetData.val().last_name;
  phone =  GetData.val().phone;
  Status =  GetData.val().Status;
+ Quantity_value = GetData.val().Quantity;
  userIDClint =  GetData.val().userIDClint;
 
 if (Status == 'waiting') {
 
-$('#Fullname').text(first_name + ' ' + last_name);
-$('#phone').text(phone);
+$('#Fullname').text("Name: "+ first_name + ' ' + last_name);
+$('#phone').text("phone: "+phone);
+$('#Quantity_value').text("Quantity: "+Quantity_value);
 $('#nlist').css({ display: "block" });
 
 

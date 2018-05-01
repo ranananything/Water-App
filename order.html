@@ -112,7 +112,7 @@ function Start() {
           var Cost_tx = scores[k].Cost_tx;
           var Date_order = scores[k].Date_order;
          
-         
+         var Quantity_value = scores[k].Quantity;
 
 
      
@@ -146,6 +146,13 @@ function Start() {
         var r232 = document.createTextNode(Cost_tx + ' JOD');       
         coustTag.appendChild(r232);                                
         document.getElementById(k).appendChild(coustTag);
+
+     var coustTag = document.createElement("p");        
+        var r232 = document.createTextNode("Quantity: " + Quantity_value );       
+        coustTag.appendChild(r232);                                
+        document.getElementById(k).appendChild(coustTag);
+
+
 
 
    var botton_n = document.createElement("a");        
