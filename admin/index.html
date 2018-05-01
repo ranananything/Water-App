@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="node_modules\font-awesome\css\font-awesome.min.css">
+	<script src="node_modules\jquery\dist\jquery.min.js"></script>
+	<script src="node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+	<script src="js\config_firebase.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+
+</head>
+<body>
+ <!-- navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#" id="nameUser">Water app</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li  onclick="Sign_out()" ><a href="#contact">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+  </div><!-- /navbar -->
+
+
+ <div class="container">
+
+<div class="row" style="padding-top: 60px">
+
+  <div class="card-panel hoverable">
+     <div class = "row">
+               <label>Status:</label>
+               <div class = "switch"><label>Off<input type = "checkbox" id="checkbox22" >
+                  <span class = "lever"></span>On</label></div> 
+            </div>
+            
+  </div>
+
+
+
+  <ul id="nlist" style=" display: none; ">
+    <li class="card-panel hoverable">
+      <h5 id="Fullname"></h5>
+      <p id="phone"></p>
+
+    <a class="btn-floating btn-large waves-effect waves-light " onclick="Agree()"><i class="fa fa-check" aria-hidden="true"> Agree</i></a>
+    <a class="btn-floating btn-large waves-effect waves-light red" onclick="Close()"><i class="fa fa-times" aria-hidden="true"> Close</i>>NO</i></a>
+  </li>
+  </ul>
+</div>
+
+
+ </div>
+
+    <footer>
+  
+    	<div class="row" id="bottomNav">
+    <div class="col-xs-4 text-center "><a href="index.html" class="activeColor"><i class="fa fa-home" aria-hidden="true"></i><br>Home</a></div>
+     <div class="col-xs-4 text-center"><a href="order.html"><i class="fa fa-money" aria-hidden="true"></i><br>Order</a></div>
+    <div class="col-xs-4 text-center"><a href="Account.html"><i class="fa fa-user" aria-hidden="true"></i><br>Account</a></div>
+  </div>
+    
+    </footer>
+
+   <script type="text/javascript">
+
+
+function Agree() {
+
+  var user = firebase.auth().currentUser;
+ var uid = user.uid;
+
+
+
+var data = { Status: "okay" };
+var MyPath = firebase.database().ref( 'Station/' + User_ID + '/NewOrder/');
+MyPath.update(data)
+  .then(function() {
+    console.log('succeeded');
+ Materialize.toast('succeeded!', 4000)
+   
+  
+  var MyPath = firebase.database().ref('Station/' + User_ID);
+MyPath.once('value')
+  .then(function(GetData) {
+
+    var Data = GetData.val();
+
+var Date_order =  Date();
+
+
+
+
+
+  var data = { first_name: first_name, last_name: last_name, Time_tx:Data.Time_tx , Cost_tx:Data.Cost_tx , Date_order:Date_order};
+var MyPath = firebase.database().ref('Station/' + User_ID + '/MyOrder/');
+MyPath.push(data)
+  .then(function() {
+    console.log('succeeded');
+  })
+  .catch(function(error) {
+    console.log("failed: " + error.message);
+  });
+
+
+  var data22 = { first_name: Data.first_name, last_name: Data.last_name, Time_tx:Data.Time_tx , Cost_tx:Data.Cost_tx , Date_order:Date_order };
+var MyPath22 = firebase.database().ref('Customer/' + userIDClint + '/MyOrder/');
+MyPath22.push(data22)
+  .then(function() {
+    console.log('succeeded');
+  })
+  .catch(function(error) {
+    console.log("failed: " + error.message);
+  });
+
+
+
+  });
+
+   
+  })
+  .catch(function(error) {
+    console.log("failed: " + error.message);
+     alert (error);
+   
+           Materialize.toast(error, 4000)
+  });
+
+
+
+}
+
+function Close() {
+ 
+var data = { Status: "Close" };
+var MyPath = firebase.database().ref( 'Station/' + User_ID + '/NewOrder/');
+MyPath.update(data)
+  .then(function() {
+    console.log('succeeded');
+
+
+ Materialize.toast('succeeded!', 4000)
+   
+   
+  })
+  .catch(function(error) {
+    console.log("failed: " + error.message);
+     alert (error);
+   
+           Materialize.toast(error, 4000)
+  });
+
+}
+
+
+
+var textL = $('#checkbox22').prop('checked');
+
+
+   $(document).ready(function(){
+    $('#checkbox22').on('change', function() { 
+
+
+      var user = firebase.auth().currentUser;
+ var uid = user.uid;
+
+textL = $('#checkbox22').prop('checked');
+
+var data = { CaseCH: textL };
+var MyPath = firebase.database().ref( 'Station/' + uid + '/');
+MyPath.update(data)
+  .then(function() {
+    console.log('succeeded');
+ Materialize.toast('succeeded!', 4000)
+   
+   
+  })
+  .catch(function(error) {
+    console.log("failed: " + error.message);
+     alert (error);
+   
+           Materialize.toast(error, 4000)
+  });
+
+
+
+
+
+     })
+
+   })
+
+  function Sign_out() {
+    firebase.auth().signOut().then(function() {
+  window.location.assign('sign_in.html');
+}, function(error) {
+  console.log(' An error happened.' , error);
+   alert (error);
+});
+  }
+
+
+var first_name, last_name , Status ,userIDClint ;
+
+function start() {
+ 
+ 
+var MyPath = firebase.database().ref('Station/' + User_ID + '/NewOrder/');
+ MyPath.on('value', function(GetData) {
+
+
+ first_name =  GetData.val().first_name;
+ last_name =  GetData.val().last_name;
+ phone =  GetData.val().phone;
+ Status =  GetData.val().Status;
+ userIDClint =  GetData.val().userIDClint;
+
+if (Status == 'waiting') {
+
+$('#Fullname').text(first_name + ' ' + last_name);
+$('#phone').text(phone);
+$('#nlist').css({ display: "block" });
+
+
+
+} else if (Status == 'okay'){
+
+ 
+
+
+$('#nlist').css({ display: "none" });
+
+}else if (Status == 'Close'){
+
+$('#nlist').css({ display: "none" });
+
+}
+
+
+
+
+
+  console.log("Change Data" , GetData.val().Status);
+
+
+ 
+ }); 
+
+}
+
+
+
+
+
+  
+
+
+  
+var User_ID;
+var name_user;
+      function Start22() {
+
+
+   
+
+var data = { CaseCH: false };
+var MyPath = firebase.database().ref( 'Station/' + User_ID + '/');
+MyPath.update(data)
+  .then(function() {
+    console.log('succeeded');
+
+   
+   
+  })
+  .catch(function(error) {
+    console.log("failed: " + error.message);
+     alert (error);
+   
+           Materialize.toast(error, 4000)
+  });
+
+
+
+        var ref_v22 = firebase.database().ref("Station/" + User_ID + "/");
+   ref_v22.once('value')
+  .then(function(GetData) {
+
+    var Data = GetData.val();
+      name_user = Data.first_name + " " + Data.last_name ;
+       $('#nameUser').text(name_user)
+
+     });
+
+
+
+        }
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+  
+window.User_ID = user.uid ;
+Start22();
+ start();
+    
+  } else {
+     window.location.assign('sign_in.html');
+  }  
+});
+
+
+</script>
+    <!-- <script type="text/javascript" src="js/myl.js" ></script> -->
+</body>
+</html>

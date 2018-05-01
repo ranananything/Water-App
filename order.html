@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="node_modules\font-awesome\css\font-awesome.min.css">
+	<script src="node_modules\jquery\dist\jquery.min.js"></script>
+	<script src="node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+	<script src="js\config_firebase.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+</head>
+<body>
+ <!-- navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#" id="nameUser">Water app</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li onclick="Sign_out()"><a href="#contact">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+  </div><!-- /navbar -->
+
+
+
+ <div class="container">
+
+<div class="row" style="padding-top: 60px">
+  <ul id="nlist">
+    
+  </ul>
+</div>
+
+
+ </div>
+
+
+    <footer>
+  
+    	<div class="row" id="bottomNav">
+    <div class="col-xs-4 text-center "><a href="index.html" class="activeColor"><i class="fa fa-home" aria-hidden="true"></i><br>Home</a></div>
+    <div class="col-xs-4 text-center"><a href="order.html"><i class="fa fa-money" aria-hidden="true"></i><br>Order</a></div>
+    <div class="col-xs-4 text-center"><a href="Account.html"><i class="fa fa-user" aria-hidden="true"></i><br>Account</a></div>
+  </div>
+    
+    </footer>
+</body>
+
+<script type="text/javascript">
+
+  function Sign_out() {
+    firebase.auth().signOut().then(function() {
+  window.location.assign('sign_in.html');
+}, function(error) {
+  console.log(' An error happened.' , error);
+   alert (error);
+});
+  }
+
+
+  
+var User_ID;
+function Start() {
+
+   
+    var scores;
+
+    var ref_v = firebase.database().ref( 'Customer/' + User_ID + '/MyOrder/');
+
+    ref_v.limitToFirst(20).orderByKey().on('value', getData, errData);
+
+    function getData(data){
+         scores = data.val();
+        var keys = Object.keys(scores);
+        console.log(keys);
+
+
+        var myNode = document.getElementById("nlist");
+        myNode.innerHTML = '';
+
+
+
+
+        for (var i = 0; i < keys.length; i++) {
+            var k =keys[i];
+
+      
+
+
+
+            var first_name = scores[k].first_name;
+            var last_name = scores[k].last_name;
+            var Time_tx = scores[k].Time_tx;
+          var Cost_tx = scores[k].Cost_tx;
+          var Date_order = scores[k].Date_order;
+         
+         
+
+
+     
+     
+
+        var para = document.createElement("li");
+        var t22 = document.createTextNode(" ");
+        para.appendChild(t22); 
+        document.getElementById("nlist").appendChild(para);
+            
+            para.setAttribute('id', k);  
+            para.setAttribute('class', "card-panel hoverable"); 
+
+
+        var text_vl = document.createElement("h5");        
+        var t = document.createTextNode(first_name  + ' ' + last_name);       
+        text_vl.appendChild(t);                                
+        document.getElementById(k).appendChild(text_vl);   
+
+                var data4587 = document.createElement("p");        
+        var t4587 = document.createTextNode(Date_order);       
+        data4587.appendChild(t4587);                                
+        document.getElementById(k).appendChild(data4587);
+        
+        var date_vl = document.createElement("p");        
+        var t = document.createTextNode(Time_tx + ' Hours');       
+        date_vl.appendChild(t);                                
+        document.getElementById(k).appendChild(date_vl);
+
+           var coustTag = document.createElement("p");        
+        var r232 = document.createTextNode(Cost_tx + ' JOD');       
+        coustTag.appendChild(r232);                                
+        document.getElementById(k).appendChild(coustTag);
+
+
+   var botton_n = document.createElement("a");        
+        var t = document.createTextNode("Remove");       
+        botton_n.appendChild(t);
+        botton_n.setAttribute('class', "waves-effect  waves-light btn red");
+        var fu_onclick = "RemoveID('"+ k + "')";
+        botton_n.setAttribute('onclick' , fu_onclick); 
+        botton_n.setAttribute('style' , "z-index: 0;"); 
+        
+                                       
+        document.getElementById(k).appendChild(botton_n);
+
+
+
+/*
+        var botton_nn = document.createElement("a");        
+        var t = document.createTextNode("Edit");       
+        botton_nn.appendChild(t);
+        botton_nn.setAttribute('class', "waves-effect waves-light btn modal-trigger btn botton_n_2");
+        var fu_onclick = "edit_Id('"+k+"' , '"+text+"') ";
+        botton_nn.setAttribute('onclick' , fu_onclick); 
+        botton_nn.setAttribute('href' , '#modal2');                               
+        document.getElementById(k).appendChild(botton_nn);
+
+        var botton_nnn = document.createElement("a");        
+        var t = document.createTextNode("Show QR Code");       
+        botton_nnn.appendChild(t);
+        botton_nnn.setAttribute('class', "waves-effect waves-light btn modal-trigger blue botton_n_2");
+        
+        var fu_onclick = " show_Id('"+k+"' , '"+text+"') ";
+        botton_nnn.setAttribute('onclick' , fu_onclick);
+         botton_nnn.setAttribute('href' , '#modal1');                               
+        document.getElementById(k).appendChild(botton_nnn);
+
+
+*/
+
+
+         
+        }
+    }
+
+
+
+
+    function errData(err){
+        console.log('Error!');  
+        console.log(err);   
+    }
+
+
+
+}
+
+var name_user;
+      function Start2() {
+        var ref_v22 = firebase.database().ref("Customer/" + User_ID + "/");
+   ref_v22.once('value')
+  .then(function(GetData) {
+
+    var Data = GetData.val();
+      name_user = Data.first_name + " " + Data.last_name ;
+       $('#nameUser').text(name_user)
+
+     });
+
+
+
+        }
+
+
+function RemoveID(key) {
+var UserID = 225422;
+var MyPath = firebase.database().ref('Customer/' + User_ID + '/MyOrder/' );
+MyPath.child(key).remove().then(function() {
+    console.log("Remove succeeded.");
+    Materialize.toast("Done", 4000);
+    Start();
+  })
+  .catch(function(error) {
+    console.log("Remove failed: " + error.message)
+  });
+}
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+  
+window.User_ID = user.uid ;
+Start();
+Start2();
+    
+  } else {
+     window.location.assign('sign_in.html');
+  }
+});
+
+
+
+  
+
+</script>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="node_modules\font-awesome\css\font-awesome.min.css">
+	<script src="node_modules\jquery\dist\jquery.min.js"></script>
+	<script src="node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+	<script src="js\config_firebase.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+
+</head>
+<body>
+ <!-- navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#" id="nameUser">Water app</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li  onclick="Sign_out()" ><a href="#contact">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+  </div><!-- /navbar -->
+
+       
+       
+     <div class="row" style="  position: fixed;
+    right: 0;
+    left: 0;
+        padding-top: 51px;
+    z-index: 1029;" 
+>
+<div id="map" style="height: 200px; "></div>
+
+ <a class="btn-floating btn waves-effect waves-light " style=" top: -53px; right: -12px; " onclick="StartzoomYour()"><i class="fa fa-map-pin" aria-hidden="true"></i></a>
+       </div>
+ <div class="container">
+
+<div class="row" style="padding-top: 253px; margin-bottom: 68px;">
+  <ul id="nlist">
+    
+  </ul>
+</div>
+
+
+ </div>
+
+    <footer>
+  
+    	<div class="row" id="bottomNav">
+    <div class="col-xs-4 text-center "><a href="index.html" class="activeColor"><i class="fa fa-home" aria-hidden="true"></i><br>Home</a></div>
+    <div class="col-xs-4 text-center"><a href="order.html"><i class="fa fa-money" aria-hidden="true"></i><br>Order</a></div>
+    <div class="col-xs-4 text-center"><a href="Account.html"><i class="fa fa-user" aria-hidden="true"></i><br>Account</a></div>
+  </div>
+    
+    </footer>
+
+   <script type="text/javascript">
+
+  function Sign_out() {
+    firebase.auth().signOut().then(function() {
+  window.location.assign('sign_in.html');
+}, function(error) {
+  console.log(' An error happened.' , error);
+   alert (error);
+});
+  }
+  
+  
+var User_ID;
+
+ var first_name ;
+var last_name;
+var phone;
+var name_user;
+var myLat ;
+var myLng ; 
+function Start2() {
+
+	 var ref_v22 = firebase.database().ref("Customer/" + User_ID + "/");
+   ref_v22.once('value')
+  .then(function(GetData) {
+
+    var Data = GetData.val();
+      name_user = Data.first_name + " " + Data.last_name ;
+     first_name = Data.first_name;
+      last_name = Data.last_name ;
+      phone = Data.phone ;
+
+ myLat =      Data.lat;
+ myLng =     Data.lng;
+       $('#nameUser').text(name_user)
+
+
+
+
+
+console.log('ponter2 ' + first_name)
+
+
+   
+    var scores;
+
+    var ref_v = firebase.database().ref( "Station/");
+
+    ref_v.limitToFirst(20).orderByKey().on('value', getData, errData);
+    
+
+    function getData(data){
+         scores = data.val();
+        var keys = Object.keys(scores);
+        console.log(keys);
+
+
+        var myNode = document.getElementById("nlist");
+        myNode.innerHTML = '';
+
+
+
+
+        for (var i = 0; i < keys.length; i++) {
+            var k =keys[i];
+
+      
+            var first_name =  scores[k].first_name;
+            var last_name =  scores[k].last_name;
+
+            var Time_tx = scores[k].Time_tx;
+             var phone = scores[k].phone;
+            var Cost_tx = scores[k].Cost_tx;
+               var CaseCH = scores[k].CaseCH;
+        var lat = scores[k].lat;
+        var lng = scores[k].lng;
+
+
+
+     
+      if (CaseCH == true) {
+
+
+ 
+
+        var para = document.createElement("li");
+        var t22 = document.createTextNode(" ");
+        para.appendChild(t22); 
+        document.getElementById("nlist").appendChild(para);
+            
+            para.setAttribute('id', k);  
+            para.setAttribute('class', "card-panel hoverable"); 
+                    var fu_onclick22 = "Startzoom("+ lat + " , "+ lng + ")";
+        para.setAttribute('onclick' , fu_onclick22); 
+
+        var text_vl = document.createElement("h5");        
+        var t = document.createTextNode(first_name + ' ' + last_name );       
+        text_vl.appendChild(t);                                
+        document.getElementById(k).appendChild(text_vl);   
+
+
+        var date_vl = document.createElement("p");        
+        var t = document.createTextNode(Time_tx + ' Hours, ' +Cost_tx + 'JOD');       
+        date_vl.appendChild(t);                                
+        document.getElementById(k).appendChild(date_vl);
+
+           var coustTag = document.createElement("p");        
+        var r232 = document.createTextNode(phone );       
+        coustTag.appendChild(r232);                                
+        document.getElementById(k).appendChild(coustTag);
+
+    var coustTag = document.createElement("p");        
+        var r232 = document.createTextNode("Distance: " + Math.floor(getDistanceFromLatLonInKm(lat, lng, myLat, myLng))  + " KM");       
+        coustTag.appendChild(r232);                                
+        document.getElementById(k).appendChild(coustTag);
+        //  var timeTag = document.createElement("p");        
+        // var t21215 = document.createTextNode(Time);       
+        // timeTag.appendChild(t21215);                                
+        // document.getElementById(k).appendChild(timeTag);
+
+
+
+        var botton_n = document.createElement("a");        
+        var t = document.createTextNode("Choose");       
+        botton_n.appendChild(t);
+        botton_n.setAttribute('class', "waves-effect  waves-light btn ");
+        var fu_onclick = "Start('"+ k + "')";
+        botton_n.setAttribute('onclick' , fu_onclick); 
+        botton_n.setAttribute('style' , "z-index: 0;"); 
+        
+                                       
+        document.getElementById(k).appendChild(botton_n);
+
+
+
+var lat_lng = {lat: lat, lng: lng}; 
+   addMarker(lat_lng ,first_name + ' ' + last_name ); 
+
+
+}
+
+
+/*
+        var botton_nn = document.createElement("a");        
+        var t = document.createTextNode("Edit");       
+        botton_nn.appendChild(t);
+        botton_nn.setAttribute('class', "waves-effect waves-light btn modal-trigger btn botton_n_2");
+        var fu_onclick = "edit_Id('"+k+"' , '"+text+"') ";
+        botton_nn.setAttribute('onclick' , fu_onclick); 
+        botton_nn.setAttribute('href' , '#modal2');                               
+        document.getElementById(k).appendChild(botton_nn);
+
+        var botton_nnn = document.createElement("a");        
+        var t = document.createTextNode("Show QR Code");       
+        botton_nnn.appendChild(t);
+        botton_nnn.setAttribute('class', "waves-effect waves-light btn modal-trigger blue botton_n_2");
+        
+        var fu_onclick = " show_Id('"+k+"' , '"+text+"') ";
+        botton_nnn.setAttribute('onclick' , fu_onclick);
+         botton_nnn.setAttribute('href' , '#modal1');                               
+        document.getElementById(k).appendChild(botton_nnn);
+
+
+*/
+
+
+         
+        }
+    }
+
+
+
+
+    function errData(err){
+        console.log('Error!');  
+        console.log(err);   
+    }
+
+  });
+
+}
+
+
+
+
+
+
+
+
+function Start(key ) {
+  
+ var data22 = { Status: "waiting" , userIDClint: User_ID , first_name:first_name , last_name:last_name, phone:phone  };
+console.log('ponter2 ' + data22)
+var MyPath22 = firebase.database().ref( 'Station/' + key + '/NewOrder/');
+
+MyPath22.update(data22)
+  .then(function() {
+    console.log('succeeded');
+ Materialize.toast('succeeded!', 4000)
+     MyPath22.on('value', function(GetData) {
+var Data = GetData.val();
+if(Data.Status == 'okay') {
+   Materialize.toast('Your reservation has been confirmed', 4000,'',function(){
+     window.location.assign('order.html');
+   })
+}
+  console.log("Change Data" , GetData.val());
+ 
+ }); 
+   
+  })
+  .catch(function(error) {
+    console.log("failed: " + error.message);
+     alert (error);
+   
+           Materialize.toast(error, 4000)
+  });
+
+
+
+
+
+}
+
+
+
+
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+  
+window.User_ID = user.uid ;
+Start2();
+    
+  } else {
+     window.location.assign('sign_in.html');
+  }
+});
+
+
+</script>
+
+ <script>
+
+
+var map;  
+var markers = [];  
+  
+function initMap() {  
+  var lat_lng = {lat: 31.57142, lng: 36.26084};  
+   
+  map = new google.maps.Map(document.getElementById('map'), {  
+    zoom: 7,  
+    center: lat_lng,  
+    mapTypeId: google.maps.MapTypeId.TERRAIN  
+  }); 
+
+   
+// start 
+
+   // end
+  
+  // This event listener will call addMarker() when the map is clicked.  
+
+  
+  // Adds a marker at the center of the map.  
+   
+
+
+
+}  
+
+
+// Adds a marker to the map and push to the array.  
+function addMarker(location ,nameRnter) {  
+  var marker = new google.maps.Marker({  
+    position: location,  
+    map: map  
+  });  
+  markers.push(marker);  
+     google.maps.event.addListener(marker,'click',function() {
+    var infowindow = new google.maps.InfoWindow({
+      content: nameRnter
+    });
+  infowindow.open(map,marker);
+  }); 
+}  
+
+ function StartzoomYour() {
+  var location = {lat:32.5391395, lng:35.8565256};
+     var marker = new google.maps.Marker({  
+    position: location,  
+    map: map ,
+     icon: "css/iconMap.png" 
+  }); 
+
+     google.maps.event.addListener(marker,'click',function() {
+    var infowindow = new google.maps.InfoWindow({
+      content: "Your location "
+    });
+  infowindow.open(map,marker);
+  }); 
+
+
+map.setZoom(14);
+    map.setCenter(location);
+}
+
+
+
+
+
+ function Startzoom(lat,lng) {
+
+   
+map.setZoom(14);
+    map.setCenter({lat:lat, lng:lng});
+}
+
+
+
+
+
+
+function getDistanceFromLatLonInM(lat1,lon1,lat2,lon2)
+{
+    return (1000.0 * getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2));
+}
+
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2)
+{
+ var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+
+
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvT88iN5tkE_Q3-qlVqIIa5RJCQrdgznY&libraries=places&callback=initMap"
+        async defer></script>
+
+
+    <!-- <script type="text/javascript" src="js/myl.js" ></script> -->
+</body>
+</html>
